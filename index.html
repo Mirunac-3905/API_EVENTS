@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funny Jokes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .heading {
+            margin-top: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+        #btn {
+            width: 90px;
+            height: 50px;
+            border-radius: 20px;
+            border: none;
+            background-color: rgb(8, 231, 231);
+            color: black;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #btn:hover {
+            background-color: rgb(0, 204, 204);
+        }
+        .image {
+            margin-top: 100px;
+            width: 300px;
+            height: auto;
+        }
+        #jokecontent, #joke {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #555;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1 class="heading">Wanna Hear Something Funny?</h1>
+    <button id="btn">YES</button>
+    <div id="jokecontent"></div>
+    <div id="joke"></div>
+    <img src="minion.png" alt="Minion" class="image">
+    <script>
+        const button = document.getElementById('btn');
+
+const jokecontent= document.getElementById('jokecontent');
+
+const joke = document.getElementById('joke');
+button.onclick=()=>{
+    axios.get('https://official-joke-api.appspot.com/random_joke').then(function(response){
+       button.textContent="Next";
+       jokecontent.textContent = response.data.setup;
+       setTimeout(function(){
+        joke.textContent = response.data.punchline;
+       },5000);
+      
+    })
+    .catch(function(error){
+        console.log(error);
+    })
+
+};
+    </script>
+</body>
+</html>

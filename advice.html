@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 250px;
+            background: url("https://thumbs.dreamstime.com/b/d-animated-scene-featuring-counselor-sitting-office-engaging-friendly-conversation-young-client-ideal-344017010.jpg") no-repeat center center;
+            background-size: cover;
+            color: #333;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        #advice {
+            font-size: 1.5rem;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #f8b400;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #d49e00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Advice Generator</h1>
+    <div id="advice">Click the button below to get some advice!</div>
+    <label for="categories">Choose a category:</label>
+    <select id="categories">
+        <option value="general">General</option>
+        <option value="motivation">Motivation</option>
+        <option value="humor">Humor</option>
+        <option value="life">Life Tips</option>
+    </select>
+    <button id="getAdviceBtn">Get Advice</button>
+
+    <script>
+        const adviceDiv = document.getElementById('advice');
+        const getAdviceBtn = document.getElementById('getAdviceBtn');
+        const categorySelect = document.getElementById('categories');
+
+        function speakAdvice(advice) {
+            const speech = new SpeechSynthesisUtterance(advice);
+            speech.lang = 'en-US';  
+            speechSynthesis.speak(speech);
+        }
+
+        getAdviceBtn.addEventListener('click', () => {
+            const selectedCategory = categorySelect.value; 
+            const apiUrl = `https://api.adviceslip.com/advice`; 
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                 
+                    if (data.slip && data.slip.advice) {
+                        const advice = `"${data.slip.advice}"`;
+                        adviceDiv.textContent = advice; 
+                        speakAdvice(advice); 
+                    } else {
+                        adviceDiv.textContent = "Oops! Couldn't fetch advice for the selected category.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching advice:', error);
+                    adviceDiv.textContent = "Oops! Couldn't fetch advice. Try again!";
+                });
+        });
+    </script>
+</body>
+</html>
